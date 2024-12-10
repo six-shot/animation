@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fullscreen to Right Scroll Animation</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body,
+      html {
+        overflow-x: hidden;
+        background-color: #1A1A1A;
+      }
+
+      .container {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+      }
+
+      .image-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform-origin: top left;
+      }
+
+      .image-wrapper video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .left {
+        font-size: 5vw;
+        white-space: nowrap;
+        z-index: 10;
+        position: relative;
+        clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+        padding: 0 2rem;
+        opacity: 0; /* Hidden initially */
+      }
+
+      .spacer {
+        width: 100%;
+        height: 100vh;
+        background: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="image-wrapper">
+        <video
+          src="/hero.mp4"
+          autoplay
+          muted
+          loop
+          playsinline
+        ></video>
+      </div>
+      <div class="left">Lorem ipsum </div>
+    </div>
+    <div class="spacer"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Timeline for scroll-triggered animation
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: ".container",
+            pin: true,
+            start: "top top",
+            end: "+=200%",
+            scrub: true,
+            markers: false, // Set to true during debugging
+          },
+        })
+        .to(".image-wrapper", {
+          scale: 0.7,
+          x: () => window.innerWidth * 0.4,
+          y: () => window.innerHeight * 0.1,
+         
+          ease: "power2.out",
+        })
+        .to(
+          ".left",
+          {
+            clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+            opacity: 1,
+            ease: "power1.out",
+          },
+          "<"
+        );
+    </script>
+  </body>
+</html>
